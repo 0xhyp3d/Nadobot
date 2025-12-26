@@ -117,9 +117,6 @@ def main():
         2: "BTC/USDT0",
         3: "WETH/USDT0", 
         4: "ETH/USDT0",
-        5: "SOL/USDT0",
-        18: "ZEC/USDT0",
-        22: "FARTCOIN/USDT0",
         # Adicionar outros conhecidos conforme necessário
     }
     

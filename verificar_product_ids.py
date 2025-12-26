@@ -22,8 +22,8 @@ def main():
             print("SÍMBOLOS DISPONÍVEIS NA NADO PROTOCOL")
             print("=" * 60)
             
-            # Buscar especificamente por BTC, FARTCoin e ZEC
-            target_symbols = ['BTC', 'FART', 'ZEC', 'ETH', 'WETH']
+            # Buscar especificamente por BTC, ETH e WETH
+            target_symbols = ['BTC', 'ETH', 'WETH']
             
             print("\n📊 Produtos relevantes encontrados:")
             print("-" * 60)
@@ -55,25 +55,25 @@ def main():
             
             # Identificar product_ids recomendados
             btc_perp = None
-            fart_perp = None
-            zec_perp = None
+            eth_perp = None
+            weth = None
             
             for sym in symbols:
                 symbol = sym.get('symbol', '')
                 if 'BTC-PERP' in symbol or (symbol == 'BTC' and 'PERP' not in symbol):
                     btc_perp = sym.get('product_id')
-                if 'FARTCOIN-PERP' in symbol or 'FART-PERP' in symbol:
-                    fart_perp = sym.get('product_id')
-                if 'ZEC-PERP' in symbol:
-                    zec_perp = sym.get('product_id')
+                if 'ETH-PERP' in symbol:
+                    eth_perp = sym.get('product_id')
+                if 'WETH' in symbol and 'PERP' not in symbol:
+                    weth = sym.get('product_id')
             
             print("\nProduct IDs recomendados:")
             if btc_perp is not None:
                 print(f"  BTC/USDT0 Perp: {btc_perp}")
-            if fart_perp is not None:
-                print(f"  FARTCoin/USDT0 Perp: {fart_perp}")
-            if zec_perp is not None:
-                print(f"  ZEC/USDT0 Perp: {zec_perp}")
+            if eth_perp is not None:
+                print(f"  ETH/USDT0 Perp: {eth_perp}")
+            if weth is not None:
+                print(f"  WETH/USDT0: {weth}")
             
         else:
             print(f"❌ Erro ao consultar API: Status {response.status_code}")

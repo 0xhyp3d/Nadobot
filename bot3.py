@@ -21,24 +21,18 @@ def main():
         
         # Configuração baseada na imagem fornecida
         config = {
-            'subaccount_name': "default",
+            'subaccount_name': "bot3",  # Subconta específica para Bot3 (altere conforme necessário)
             'leverage': 40,  # Alavancagem de 40x
             'products': {
-                2: {'name': 'BTC/USDT0'},      # BTC-PERP (product_id 2) - ✅ Perpétuo
-                3: {'name': 'WETH/USDT0'},     # WETH/USDT0 (product_id 3) - ✅ Spot
-                4: {'name': 'ETH/USDT0'},      # ETH-PERP (product_id 4) - ✅ Perpétuo
+                2: {'name': 'BTC/USDT0'},   # BTC-PERP (product_id 2) - Perpétuo
+                4: {'name': 'ETH/USDT0'},   # ETH-PERP (product_id 4) - Perpétuo
+                3: {'name': 'WETH/USDT0'},  # WETH/USDT0 (product_id 3) - Spot
             },
             'grid_range_lower': -3.0,  # -3% do preço de mercado
             'grid_range_upper': 3.0,   # +3% do preço de mercado
             'grid_levels': 3,  # Número de níveis de grid (ajustado para max 3 ordens ativas)
             'grid_kind': 'geometric',  # Geometric grid
             'quantity_per_order_usdc': 200,  # 200 USDC por ordem
-            # Modo agressivo - DESATIVADO (modo padrão)
-            'aggressive_mode': False,  # Modo padrão ativo
-            'aggressive_grid_spacing': 0.03,  # Grid mais apertado no modo agressivo
-            'aggressive_max_orders': 8,  # Mais ordens no modo agressivo
-            'aggressive_grid_levels': 5,  # Mais níveis no modo agressivo
-            'aggressive_quantity_usdc': 150,  # Quantidade menor no modo agressivo para evitar account health
             'max_open_orders_per_product': 3,  # Max active orders: 3
             'stop_loss_pct': 0.01,  # 1% (Close Position on Loss: 1)
             'take_profit_pct': 0.01,  # 1% (Close Position on Profit: 1)

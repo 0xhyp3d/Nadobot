@@ -10,7 +10,6 @@ Sistema de trading automatizado para a exchange **Nado Protocol** usando múltip
 - [Configuração](#-configuração)
 - [Uso](#-uso)
 - [Múltiplos Bots](#-múltiplos-bots)
-- [Modo Agressivo](#-modo-agressivo)
 - [Gerenciamento de Risco](#-gerenciamento-de-risco)
 - [Logs e Monitoramento](#-logs-e-monitoramento)
 - [Solução de Problemas](#-solução-de-problemas)
@@ -21,8 +20,7 @@ Sistema de trading automatizado para a exchange **Nado Protocol** usando múltip
 ### Funcionalidades Principais
 
 - ✅ **Múltiplas Estratégias**: Grid Trading, Market Making e Williams %R
-- ✅ **Múltiplos Produtos**: Trading simultâneo em vários perpetuals (SOL, ZEC, FARTCoin, etc.)
-- ✅ **Modo Agressivo**: Configurável para maior rentabilidade e volume
+- ✅ **Múltiplos Produtos**: Trading simultâneo em BTC, ETH e WETH
 - ✅ **Proteção Cloudflare**: Bypass automático de desafios do Cloudflare
 - ✅ **Gerenciamento de Erros**: Desabilitação automática de produtos com problemas
 - ✅ **Ajuste Dinâmico**: Redução automática de quantidade em caso de "account health" insuficiente
@@ -114,9 +112,9 @@ config = {
     'subaccount_name': "default",           # Nome da subconta
     'leverage': 40,                         # Alavancagem (40x)
     'products': {
-        5: {'name': 'SOL/USDT0'},          # Product ID e nome
-        18: {'name': 'ZEC/USDT0'},         # Adicione mais produtos
-        22: {'name': 'FARTCoin/USDT0'},
+        2: {'name': 'BTC/USDT0'},   # BTC-PERP (product_id 2) - Perpétuo
+        4: {'name': 'ETH/USDT0'},   # ETH-PERP (product_id 4) - Perpétuo
+        3: {'name': 'WETH/USDT0'},  # WETH/USDT0 (product_id 3) - Spot
     },
     'quantity_per_order_usdc': 200,        # Quantidade por ordem em USDC
     'grid_spacing': 0.05,                  # Espaçamento do grid (0.05%)
@@ -214,11 +212,9 @@ Pressione `Ctrl+C` para encerrar de forma segura. O bot cancelará todas as orde
 2. **Usar Contas Diferentes**:
    - Cada bot com sua própria `PRIVATE_KEY`
 
-3. **Dividir Produtos**:
-   - Bot 1 opera em SOL e ZEC
-   - Bot 2 opera em FARTCoin
+3. **Dividir Produtos** (opcional):
+   - Cada bot pode operar em produtos diferentes se necessário
 
-## 🔥 Modo Agressivo
 
 O modo agressivo otimiza os parâmetros para maior rentabilidade e volume de trades.
 

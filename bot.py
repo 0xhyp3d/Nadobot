@@ -272,53 +272,35 @@ class NadoFuturesBot:
             'grid_range_upper': None,  # Range superior em % (ex: 3.0 para +3%)
             'grid_kind': 'linear',  # 'linear' ou 'geometric'
             'quantity_per_order_usdc': None,  # Quantidade por ordem em USDC (se especificado, usa isso ao invés de amount_x18)
-            # Modo Agressivo (configurável via .env ou config)
-            'aggressive_mode': os.getenv('AGGRESSIVE_MODE', 'false').lower() == 'true',  # Modo agressivo ON/OFF
         }
         
         # Mesclar configuração customizada com padrão
         if config:
             default_config.update(config)
         
-        # Modo Agressivo (verificar antes de aplicar outras configurações)
-        self.aggressive_mode = default_config.get('aggressive_mode', False)
-        
-        # Aplicar configurações base (podem ser sobrescritas pelo modo agressivo)
-        base_grid_spacing = default_config['grid_spacing']
-        base_max_orders = default_config['max_open_orders_per_product']
-        base_grid_levels = default_config['grid_levels']
-        
-        # Aplicar configurações agressivas se modo agressivo estiver ativado
-        if self.aggressive_mode:
-            base_grid_spacing = default_config.get('aggressive_grid_spacing', 0.03)  # Grid mais apertado (0.03%)
-            base_max_orders = default_config.get('aggressive_max_orders', 8)  # Mais ordens
-            base_grid_levels = default_config.get('aggressive_grid_levels', 5)  # Mais níveis
-        
         # Aplicar configurações
         self.subaccount_name = default_config['subaccount_name']
         self.leverage = default_config['leverage']
         self.products = default_config['products']
-        self.grid_spacing = base_grid_spacing
-        self.max_open_orders_per_product = base_max_orders
+        self.grid_spacing = default_config['grid_spacing']
+        self.max_open_orders_per_product = default_config['max_open_orders_per_product']
         self.stop_loss_pct = default_config['stop_loss_pct']
         self.take_profit_pct = default_config['take_profit_pct']
         self.min_balance = default_config['min_balance']
-        self.grid_levels = base_grid_levels
+        self.grid_levels = default_config['grid_levels']
         self.order_expiration = default_config['order_expiration']
         # Grid Trading com range
         self.grid_range_lower = default_config.get('grid_range_lower')
         self.grid_range_upper = default_config.get('grid_range_upper')
         self.grid_kind = default_config.get('grid_kind', 'linear')
         
-        # Quantidade por ordem - usar aggressive_quantity_usdc se modo agressivo estiver ativo
-        if self.aggressive_mode and default_config.get('aggressive_quantity_usdc') is not None:
-            self.quantity_per_order_usdc = default_config.get('aggressive_quantity_usdc')
-        else:
-            self.quantity_per_order_usdc = default_config.get('quantity_per_order_usdc')
+        # Quantidade por ordem
+        self.quantity_per_order_usdc = default_config.get('quantity_per_order_usdc')
         
         # Estado do bot
         self.open_orders: List[Dict] = []
         self.closed_orders: List[Dict] = []
+        self.max_closed_orders = 1000  # Limite máximo de ordens fechadas em memória (previne consumo infinito de RAM)
         self.total_profit = Decimal('0')
         self.total_trades = 0
         self.running = False
@@ -349,17 +331,6 @@ class NadoFuturesBot:
         
         # Configurar logger específico para este bot
         self.logger = setup_logger(bot_name)
-        
-        # Log do modo ativo (depois de inicializar o logger)
-        if self.aggressive_mode:
-            self.logger.info("🔥 MODO AGRESSIVO ATIVADO - Parâmetros otimizados para maior rentabilidade e volume")
-            self.logger.info(f"  - Grid spacing: {self.grid_spacing}% (padrão: 0.05%)")
-            self.logger.info(f"  - Max ordens: {self.max_open_orders_per_product} (padrão: 5)")
-            self.logger.info(f"  - Grid levels: {self.grid_levels} (padrão: 3)")
-            if self.quantity_per_order_usdc:
-                self.logger.info(f"  - Quantidade por ordem: {self.quantity_per_order_usdc} USDC")
-        else:
-            self.logger.info("✅ MODO PADRÃO - Configuração conservadora ativa")
         
         # Resetar produtos desabilitados ao iniciar (dar uma nova chance)
         # Isso permite que produtos que foram desabilitados anteriormente sejam reativados ao reiniciar
@@ -464,15 +435,10 @@ class NadoFuturesBot:
         # Mapeamento de product_id para size_increment_x18
         # Baseado na documentação: https://docs.nado.xyz/developer-resources/api/symbols
         # - Product 2 (BTC-PERP): 0.00005 BTC = 50000000000000
-        # - Product 22 (FARTCOIN-PERP): 0.001 = 1000000000000000 (estimado)
-        # - Product 18 (ZEC-PERP): 0.001 = 1000000000000000 (estimado)
         size_increments = {
             2: 50000000000000,      # 0.00005 BTC (BTC-PERP)
             3: 1000000000000000,    # 0.001 WETH (WETH/USDT0) - valor estimado, ajustar se necessário
             4: 1000000000000000,    # 0.001 ETH (ETH-PERP) - valor estimado, ajustar se necessário
-            5: 10000000000000000,   # 0.01 SOL (SOL-PERP) - valor estimado, ajustar se necessário
-            18: 1000000000000000,   # 0.001 ZEC (ZEC-PERP)
-            22: 1000000000000000,   # 0.001 FARTCOIN (FARTCOIN-PERP)
         }
         
         if product_id in size_increments:
@@ -610,24 +576,9 @@ class NadoFuturesBot:
                 bid_x18 = price_response.bid_x18
                 ask_x18 = price_response.ask_x18
                 
-                # Log de debug para verificar valores brutos (temporário)
-                product_name = self.products.get(product_id, {}).get('name', f'Product_{product_id}')
-                if product_id in [18, 22]:  # ZEC e FARTCoin apenas
-                    self.logger.debug(
-                        f"[DEBUG PREÇO] {product_name} (ID {product_id}): "
-                        f"bid_x18={bid_x18}, ask_x18={ask_x18}"
-                    )
-                
                 # Converter de x18 para float
                 bid = float(from_x18(bid_x18))
                 ask = float(from_x18(ask_x18))
-                
-                # Log de debug para verificar valores convertidos (temporário)
-                if product_id in [18, 22]:  # ZEC e FARTCoin apenas
-                    self.logger.debug(
-                        f"[DEBUG PREÇO] {product_name} (ID {product_id}): "
-                        f"bid={bid:.6f}, ask={ask:.6f}, mid={(bid + ask) / 2.0:.6f}"
-                    )
                 
                 # Retornar preço médio (mid price)
                 return (bid + ask) / 2.0
@@ -966,6 +917,21 @@ class NadoFuturesBot:
                         self.total_trades += 1
                     
                     self.closed_orders.append(order)
+                    
+                    # Limpar cache de ordens antigas se exceder o limite (previne consumo infinito de RAM)
+                    if len(self.closed_orders) > self.max_closed_orders:
+                        # Remover as ordens mais antigas (FIFO) mantendo apenas as mais recentes
+                        excess = len(self.closed_orders) - self.max_closed_orders
+                        removed_count = 0
+                        # Remover apenas ordens que não são de compra (para evitar remover ordens que podem ser pareadas)
+                        # Ou remover as mais antigas se já temos muitas
+                        for _ in range(excess):
+                            if len(self.closed_orders) > 0:
+                                self.closed_orders.pop(0)  # Remove a ordem mais antiga
+                                removed_count += 1
+                        if removed_count > 0:
+                            self.logger.debug(f"Cache de ordens fechadas limpo: {removed_count} ordens antigas removidas (limite: {self.max_closed_orders})")
+                    
                     product_name = order.get('product_name', f"Product_{product_id}")
                     self.log_trade(
                         f"ORDEM FECHADA ({order['side'].upper()}) [{product_name}] {order.get('leverage', 1)}x", 
@@ -978,7 +944,7 @@ class NadoFuturesBot:
             # Remover ordens fechadas da lista de abertas
             for order in orders_to_remove:
                 self.open_orders.remove(order)
-                
+            
         except Exception as e:
             self.logger.warning(f"Erro ao verificar ordens abertas: {e}")
     
@@ -1105,11 +1071,11 @@ class NadoFuturesBot:
         for product_id, product_info in self.products.items():
             # Verificar se produto está desabilitado devido a erros do Cloudflare
             if self.is_product_disabled(product_id):
-                continue
-            
+                    continue
+                
             if not self.check_risk_limits(product_id):
-                continue
-            
+                    continue
+                
             try:
                 product_name = product_info['name']
                 
@@ -1463,6 +1429,8 @@ class NadoFuturesBot:
             iteration = 0
             consecutive_errors = 0
             max_consecutive_errors = 5  # Após 5 erros consecutivos, aumentar delay
+            last_cache_cleanup = time.time()  # Timestamp da última limpeza de cache
+            cache_cleanup_interval = 3600  # Limpar cache a cada 1 hora (3600 segundos)
             
             while self.running:
                 try:
@@ -1538,6 +1506,22 @@ class NadoFuturesBot:
                     # Reset contador de erros se chegou até aqui sem problemas críticos
                     consecutive_errors = 0
                     
+                    # Limpeza periódica de cache de ordens antigas (a cada 1 hora)
+                    current_time = time.time()
+                    if current_time - last_cache_cleanup >= cache_cleanup_interval:
+                        # Remover ordens fechadas muito antigas (mais de 24 horas)
+                        # Como não temos timestamp nas ordens, vamos apenas limitar o tamanho
+                        if len(self.closed_orders) > self.max_closed_orders:
+                            excess = len(self.closed_orders) - self.max_closed_orders
+                            removed_count = 0
+                            for _ in range(excess):
+                                if len(self.closed_orders) > 0:
+                                    self.closed_orders.pop(0)
+                                    removed_count += 1
+                            if removed_count > 0:
+                                self.logger.info(f"Limpeza periódica de cache: {removed_count} ordens antigas removidas (total mantido: {len(self.closed_orders)})")
+                        last_cache_cleanup = current_time
+                    
                     # Resumo do status
                     active_orders = [o for o in self.open_orders if o['status'] == 'open']
                     orders_by_product = {}
@@ -1561,7 +1545,6 @@ class NadoFuturesBot:
                     self.logger.info("\nInterrupção do usuário detectada. Encerrando bot...")
                     self.running = False
                     break
-                    
                 except Exception as e:
                     if self.is_cloudflare_error(e):
                         consecutive_errors += 1

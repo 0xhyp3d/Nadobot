@@ -24,7 +24,7 @@ def main():
         client = create_nado_client(network, private_key)
         
         # Product IDs para testar
-        product_ids_to_test = [2, 3, 4, 18, 22]
+        product_ids_to_test = [2, 3, 4]
         
         print("=" * 60)
         print("DIAGNÓSTICO DE PRODUCT IDs E PREÇOS")
@@ -48,11 +48,11 @@ def main():
                     # Tentar identificar qual ativo é baseado no preço
                     if 80000 < mid < 90000:
                         print(f"  ⚠️  Pode ser BTC (esperado: ~87000)")
-                    elif 400 < mid < 500:
-                        print(f"  ⚠️  Pode ser ZEC (esperado: ~438)")
-                    elif 0.2 < mid < 0.3:
-                        print(f"  ⚠️  Pode ser FARTCoin (esperado: ~0.29)")
                     elif 2900 < mid < 3000:
+                        print(f"  ⚠️  Pode ser ETH (esperado: ~2900-3000)")
+                    elif 2800 < mid < 3500:
+                        print(f"  ⚠️  Pode ser WETH (esperado: ~2900-3000)")
+                    else:
                         print(f"  ⚠️  Preço ~{mid:.2f} - NÃO IDENTIFICADO (pode ser produto incorreto)")
                     print()
             except Exception as e:
@@ -62,8 +62,8 @@ def main():
         print("=" * 60)
         print("CONCLUSÃO:")
         print("  - BTC/USDT0 deveria ter product_id com preço ~87000")
-        print("  - ZEC/USDT0 deveria ter product_id com preço ~438")
-        print("  - FARTCoin/USDT0 deveria ter product_id com preço ~0.29")
+        print("  - ETH/USDT0 deveria ter product_id com preço ~2900-3000")
+        print("  - WETH/USDT0 deveria ter product_id com preço ~2900-3000")
         print("=" * 60)
         
     except Exception as e:
