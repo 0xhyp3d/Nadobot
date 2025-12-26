@@ -1,0 +1,30 @@
+═══════════════════════════════════════════════════════════════
+  COMANDOS RÁPIDOS - ACOMPANHAR LOGS EM 4 TERMINAIS
+═══════════════════════════════════════════════════════════════
+
+TERMINAL 1 (Bot1):
+  cd /Users/igorbirni/Bot && ./watch_bot1.sh
+
+TERMINAL 2 (Bot2):
+  cd /Users/igorbirni/Bot && ./watch_bot2.sh
+
+TERMINAL 3 (Bot3):
+  cd /Users/igorbirni/Bot && ./watch_bot3.sh
+
+TERMINAL 4 (Bot4):
+  cd /Users/igorbirni/Bot && ./watch_bot4.sh
+
+───────────────────────────────────────────────────────────────
+
+ALTERNATIVA (comandos diretos):
+
+TERMINAL 1: tail -f logs/bot1.log
+TERMINAL 2: tail -f logs/bot2.log
+TERMINAL 3: tail -f logs/bot3.log
+TERMINAL 4: tail -f logs/bot4.log
+
+───────────────────────────────────────────────────────────────
+
+Para parar: Pressione Ctrl+C no terminal correspondente
+
+

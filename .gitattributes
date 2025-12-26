@@ -1,0 +1,18 @@
+# Arquivos de texto
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+*.json text eol=lf
+
+# Arquivos binários
+*.log binary
+*.pyc binary
+
+# Arquivos sensíveis (garantir que não sejam commitados)
+.env filter=git-crypt diff=git-crypt
+.env.* filter=git-crypt diff=git-crypt
+
+
+
+

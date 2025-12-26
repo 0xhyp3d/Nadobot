@@ -1,0 +1,56 @@
+==================================================
+🔥 COMO USAR O MODO AGRESSIVO - GUIA RÁPIDO
+==================================================
+
+📋 RESUMO:
+----------
+- Modo Padrão (OFF): Configuração conservadora e estável
+- Modo Agressivo (ON): Configuração otimizada para maior rentabilidade e volume
+
+⚡ COMO ATIVAR (MODO AGRESSIVO):
+--------------------------------
+1. Edite o arquivo .env (ou .env.bot1, .env.bot2, etc.)
+2. Adicione a linha:
+   AGGRESSIVE_MODE=true
+
+3. Reinicie os bots:
+   ./restart_bots.sh
+
+4. Verifique nos logs que aparece:
+   🔥 MODO AGRESSIVO ATIVADO
+
+🔄 COMO DESATIVAR (VOLTAR AO MODO PADRÃO):
+-------------------------------------------
+1. Edite o arquivo .env
+2. Mude para:
+   AGGRESSIVE_MODE=false
+   
+   OU simplesmente remova a linha AGGRESSIVE_MODE=true
+
+3. Reinicie os bots:
+   ./restart_bots.sh
+
+4. Verifique nos logs que aparece:
+   ✅ MODO PADRÃO - Configuração conservadora ativa
+
+📊 DIFERENÇAS:
+--------------
+Modo Padrão (OFF):              Modo Agressivo (ON):
+- Grid spacing: 0.05%           - Grid spacing: 0.03% (40% mais apertado)
+- Max ordens: 5                 - Max ordens: 8 (60% mais ordens)
+- Grid levels: 3                - Grid levels: 5 (67% mais níveis)
+- Quantidade: 200 USDC          - Quantidade: 150 USDC
+
+⚠️ IMPORTANTE:
+--------------
+- Sempre reinicie os bots após mudar o modo
+- O modo padrão é menos agressivo e mais estável
+- O modo agressivo cria mais ordens, certifique-se de ter saldo suficiente
+- Monitore os erros usando: ./verificar_erros.sh
+
+📚 DOCUMENTAÇÃO COMPLETA:
+-------------------------
+Veja MODO_AGRESSIVO.md para detalhes completos
+
+==================================================
+
