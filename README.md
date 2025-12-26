@@ -39,9 +39,9 @@ Sistema de trading automatizado para a exchange **Nado Protocol** usando múltip
 
 ### Bot 1 - Grid Trading / Market Making (Padrão)
 - Estratégia conservadora de market making
-- Grid spacing: 0.05% (padrão) ou 0.03% (agressivo)
-- Máximo de 5 ordens por produto (8 no modo agressivo)
-- 3 níveis de grid (5 no modo agressivo)
+- Grid spacing: 0.05%
+- Máximo de 5 ordens por produto
+- 3 níveis de grid
 
 ### Bot 2 - Grid Trading Customizável
 - Mesma base do Bot 1, com parâmetros totalmente customizáveis
@@ -91,7 +91,6 @@ Edite o arquivo `.env`:
 ```env
 PRIVATE_KEY=0xseus_64_caracteres_hexadecimais_aqui
 NADO_NETWORK=mainnet
-AGGRESSIVE_MODE=false
 ```
 
 **⚠️ IMPORTANTE**: 
@@ -216,43 +215,6 @@ Pressione `Ctrl+C` para encerrar de forma segura. O bot cancelará todas as orde
    - Cada bot pode operar em produtos diferentes se necessário
 
 
-O modo agressivo otimiza os parâmetros para maior rentabilidade e volume de trades.
-
-### Ativar Modo Agressivo
-
-Edite o arquivo `.env`:
-```env
-AGGRESSIVE_MODE=true
-```
-
-Reinicie os bots:
-```bash
-./restart_bots.sh
-```
-
-### Parâmetros do Modo Agressivo
-
-Quando ativado, os bots usam:
-- **Grid spacing**: 0.03% (40% mais apertado)
-- **Max ordens**: 8 por produto (60% mais ordens)
-- **Grid levels**: 5 níveis (67% mais níveis)
-- **Quantidade**: 150 USDC por ordem (otimizado)
-
-### Verificar se Está Ativo
-
-Nos logs, você verá:
-```
-🔥 MODO AGRESSIVO ATIVADO - Parâmetros otimizados para maior rentabilidade e volume
-```
-
-### Desativar
-
-Edite `.env`:
-```env
-AGGRESSIVE_MODE=false
-```
-
-Reinicie os bots.
 
 ## 🛡️ Gerenciamento de Risco
 

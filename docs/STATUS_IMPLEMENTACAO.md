@@ -8,45 +8,29 @@
 - [x] Sistema de desabilitação automática de produtos problemáticos
 - [x] Melhor rastreamento e logging de erros
 
-### ✅ 2. Produtos Funcionais
-- [x] Todos os bots configurados com produtos testados e funcionais
-- [x] Removidos produtos problemáticos (BTC estava dando erro)
-- [x] Configurados: SOL, ZEC, FARTCoin (todos funcionando)
+### ✅ 2. Produtos Configurados
+- [x] Todos os bots configurados com BTC, ETH e WETH
+- [x] Produtos não utilizados removidos
 
-### ✅ 3. Modo Agressivo
-- [x] Sistema completo de modo agressivo implementado
-- [x] Ativação/desativação via variável de ambiente (AGGRESSIVE_MODE)
-- [x] Parâmetros otimizados para maior rentabilidade e volume
-- [x] Documentação completa criada
-
-### ✅ 4. Otimizações
-- [x] Quantidade reduzida para evitar account health errors (200 USDC padrão, 150 no modo agressivo)
+### ✅ 3. Otimizações
+- [x] Quantidade padrão: 200 USDC
 - [x] Sistema de multiplicadores automáticos para reduzir quantidade quando necessário
-- [x] Logs informativos sobre modo ativo e reduções de quantidade
+- [x] Logs informativos sobre reduções de quantidade
 
 ## 📁 Arquivos Modificados
 
 ### Código Principal:
-1. ✅ `bot.py` - Sistema completo de modo agressivo e tratamento de erros
-2. ✅ `bot1.py` - Produtos atualizados + modo agressivo
-3. ✅ `bot2.py` - Produtos atualizados + modo agressivo
-4. ✅ `bot3.py` - Produtos atualizados + modo agressivo
-5. ✅ `bot4.py` - Produtos atualizados + modo agressivo
+1. ✅ `bot.py` - Tratamento de erros e sistema de desabilitação
+2. ✅ `bot1.py` - Produtos atualizados (BTC, ETH, WETH)
+3. ✅ `bot2.py` - Produtos atualizados (BTC, ETH, WETH)
+4. ✅ `bot3.py` - Produtos atualizados (BTC, ETH, WETH)
+5. ✅ `bot4.py` - Produtos atualizados (BTC, ETH, WETH)
 
 ### Documentação:
-1. ✅ `MODO_AGRESSIVO.md` - Guia completo do modo agressivo
-2. ✅ `CORRECAO_ERROS_ACCOUNT_HEALTH.md` - Explicação das correções
-3. ✅ `RESUMO_MELHORIAS.md` - Resumo geral das melhorias
-4. ✅ `COMO_USAR_MODO_AGRESSIVO.txt` - Guia rápido
+1. ✅ `CORRECAO_ERROS_ACCOUNT_HEALTH.md` - Explicação das correções
+2. ✅ `RESUMO_MELHORIAS.md` - Resumo geral das melhorias
 
 ## 🔧 Funcionalidades Implementadas
-
-### Modo Agressivo:
-- ✅ Ativação via `AGGRESSIVE_MODE=true` no .env
-- ✅ Grid spacing: 0.03% (vs 0.05% padrão)
-- ✅ Max ordens: 8 (vs 5 padrão)
-- ✅ Grid levels: 5 (vs 3 padrão)
-- ✅ Quantidade: 150 USDC (vs 200 USDC padrão)
 
 ### Tratamento de Erros:
 - ✅ Detecção automática de "Insufficient account health"
@@ -56,9 +40,9 @@
 - ✅ Logs informativos de todas as ações
 
 ### Produtos:
-- ✅ SOL/USDT0 (ID 5) - Configurado
-- ✅ ZEC/USDT0 (ID 18) - Configurado
-- ✅ FARTCoin/USDT0 (ID 22) - Configurado
+- ✅ BTC/USDT0 (ID 2) - Configurado
+- ✅ ETH/USDT0 (ID 4) - Configurado
+- ✅ WETH/USDT0 (ID 3) - Configurado
 - ✅ Size increments corretos para todos os produtos
 
 ## 🚀 Próximos Passos
@@ -78,43 +62,29 @@
    ./verificar_erros.sh
    ```
 
-4. **(Opcional) Ativar modo agressivo:**
-   - Editar `.env` e adicionar: `AGGRESSIVE_MODE=true`
-   - Reiniciar bots: `./restart_bots.sh`
-
 ## 📊 Configuração Atual
 
 ### Produtos Ativos:
-- SOL/USDT0 (ID 5)
-- ZEC/USDT0 (ID 18)
-- FARTCoin/USDT0 (ID 22)
+- BTC/USDT0 (ID 2)
+- ETH/USDT0 (ID 4)
+- WETH/USDT0 (ID 3)
 
-### Modo Padrão (Default):
-- Grid spacing: 0.05%
-- Max ordens: 5
-- Grid levels: 3
+### Configuração Padrão:
+- Grid spacing: 0.05% (Bot1, Bot3)
+- Max ordens: 5 (Bot1, Bot4), 10 (Bot2), 3 (Bot3)
+- Grid levels: 3 (Bot1, Bot3), 5 (Bot2)
 - Quantidade: 200 USDC
-
-### Modo Agressivo (se ativado):
-- Grid spacing: 0.03%
-- Max ordens: 8
-- Grid levels: 5
-- Quantidade: 150 USDC
 
 ## ✅ Checklist Final
 
-- [x] Modo agressivo implementado e testado
 - [x] Tratamento de erros account health implementado
-- [x] Produtos funcionais configurados
-- [x] Quantidade reduzida para evitar erros
+- [x] Produtos configurados corretamente (BTC, ETH, WETH)
+- [x] Quantidade padrão: 200 USDC
 - [x] Sistema de desabilitação automática funcionando
-- [x] Documentação completa criada
+- [x] Documentação atualizada
 - [x] Todos os bots atualizados
 - [x] Código validado (sem erros de sintaxe)
 
 ## 🎉 Status: PRONTO PARA USO
 
-Todas as melhorias foram implementadas e testadas. Os bots estão prontos para operar!
-
-Para ativar o modo agressivo, adicione `AGGRESSIVE_MODE=true` no arquivo `.env` e reinicie os bots.
-
+Todas as melhorias foram implementadas. Os bots estão prontos para operar com BTC, ETH e WETH!

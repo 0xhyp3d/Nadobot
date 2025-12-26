@@ -2,25 +2,7 @@
 
 ## ✅ Correções e Melhorias Aplicadas
 
-### 1. 🔥 Modo Agressivo Configurável
-
-**Implementado**: Sistema completo de modo agressivo com ativação/desativação via variável de ambiente.
-
-**Como usar:**
-- **Ativar**: Adicionar `AGGRESSIVE_MODE=true` no arquivo `.env`
-- **Desativar**: `AGGRESSIVE_MODE=false` ou remover a linha
-
-**Parâmetros do Modo Agressivo:**
-- Grid spacing: 0.03% (vs 0.05% padrão)
-- Max ordens: 8 (vs 5 padrão)
-- Grid levels: 5 (vs 3 padrão)
-- Quantidade: 150 USDC (vs 200 USDC padrão)
-
-**Documentação**: Ver `MODO_AGRESSIVO.md`
-
----
-
-### 2. 🛡️ Tratamento de Erros "Insufficient Account Health"
+### 1. 🛡️ Tratamento de Erros "Insufficient Account Health"
 
 **Implementado**: Sistema automático de redução de quantidade quando ocorrem erros de account health.
 
@@ -30,21 +12,19 @@
 - Reduções subsequentes: 49%, 30% (mínimo)
 - Aplica multiplicador automaticamente nas próximas ordens
 
-**Quantidade Padrão Reduzida:**
-- **Antes**: 250 USDC por ordem
-- **Agora**: 200 USDC por ordem (modo padrão)
-- **Modo Agressivo**: 150 USDC por ordem
+**Quantidade Padrão:**
+- **Padrão**: 200 USDC por ordem
 
 **Documentação**: Ver `CORRECAO_ERROS_ACCOUNT_HEALTH.md`
 
 ---
 
-### 3. 🚫 Desabilitação Automática de Produtos Problemáticos
+### 2. 🚫 Desabilitação Automática de Produtos Problemáticos
 
 **Melhorado**: Sistema de desabilitação automática de produtos com muitos erros.
 
 **Funcionamento:**
-- **Cloudflare Errors**: Desabilita temporariamente (10 minutos) após 5 erros consecutivos
+- **Cloudflare Errors**: Desabilita temporariamente (10 minutos) após 10 erros consecutivos
 - **Account Health Errors**: Reduz quantidade automaticamente
 - **Erros Gerais**: Desabilita permanentemente após 50 erros totais
 
@@ -55,25 +35,21 @@
 
 ---
 
-### 4. 📊 Produtos Funcionais Configurados
+### 3. 📊 Produtos Configurados
 
-**Atualizado**: Todos os bots agora usam apenas produtos testados e funcionais.
+**Atualizado**: Todos os bots agora usam apenas BTC, ETH e WETH.
 
 **Produtos Ativos:**
-- ✅ **SOL/USDT0** (ID 5) - Funcionando
-- ✅ **ZEC/USDT0** (ID 18) - Funcionando
-- ✅ **FARTCoin/USDT0** (ID 22) - Funcionando
-
-**Removidos:**
-- ❌ BTC/USDT0 (ID 2) - Removido devido a erros intermitentes do Cloudflare
+- ✅ **BTC/USDT0** (ID 2) - Perpétuo
+- ✅ **ETH/USDT0** (ID 4) - Perpétuo
+- ✅ **WETH/USDT0** (ID 3) - Spot
 
 ---
 
-### 5. 🔧 Ajustes Técnicos
+### 4. 🔧 Ajustes Técnicos
 
 **Size Increment:**
-- Adicionado suporte para SOL (ID 5) no `get_size_increment()`
-- Valores corretos para cada produto
+- Valores corretos para cada produto (BTC, ETH, WETH)
 
 **Quantidade:**
 - Aplicação automática de multiplicador quando há erros de account health
@@ -84,18 +60,15 @@
 ## 📝 Arquivos Modificados
 
 1. **bot.py**
-   - Adicionado sistema de modo agressivo
    - Tratamento de erros account health
    - Melhorias no sistema de desabilitação
    - Aplicação de multiplicadores de quantidade
 
 2. **bot1.py, bot2.py, bot3.py, bot4.py**
-   - Produtos atualizados (SOL, ZEC, FARTCoin)
-   - Quantidade reduzida para 200 USDC (150 no modo agressivo)
-   - Suporte a modo agressivo via .env
+   - Produtos atualizados (BTC, ETH, WETH)
+   - Quantidade padrão: 200 USDC
 
 3. **Documentação**
-   - `MODO_AGRESSIVO.md` - Guia completo do modo agressivo
    - `CORRECAO_ERROS_ACCOUNT_HEALTH.md` - Explicação das correções
    - `RESUMO_MELHORIAS.md` - Este arquivo
 
@@ -109,19 +82,7 @@
 ./restart_bots.sh
 ```
 
-### 2. (Opcional) Ativar Modo Agressivo
-
-Edite `.env` e adicione:
-```bash
-AGGRESSIVE_MODE=true
-```
-
-Depois reinicie:
-```bash
-./restart_bots.sh
-```
-
-### 3. Verificar se Está Funcionando
+### 2. Verificar se Está Funcionando
 
 ```bash
 # Ver logs em tempo real
@@ -136,19 +97,14 @@ Depois reinicie:
 ## 📊 Status Atual dos Bots
 
 ### Produtos Configurados:
-- ✅ SOL/USDT0 (ID 5)
-- ✅ ZEC/USDT0 (ID 18)
-- ✅ FARTCoin/USDT0 (ID 22)
+- ✅ BTC/USDT0 (ID 2)
+- ✅ ETH/USDT0 (ID 4)
+- ✅ WETH/USDT0 (ID 3)
 
-### Modo Padrão:
-- Grid spacing: 0.05%
-- Max ordens: 5
+### Configuração Padrão:
+- Grid spacing: 0.05% (Bot1, Bot3)
+- Max ordens: 5 (Bot1, Bot4), 10 (Bot2), 3 (Bot3)
 - Quantidade: 200 USDC
-
-### Modo Agressivo (se ativado):
-- Grid spacing: 0.03%
-- Max ordens: 8
-- Quantidade: 150 USDC
 
 ---
 
@@ -174,13 +130,11 @@ Depois reinicie:
 
 ## ⚠️ Observações Importantes
 
-1. **Quantidade Reduzida**: A quantidade foi reduzida para evitar erros de account health. Se você tem saldo suficiente, pode aumentar manualmente nos arquivos dos bots.
+1. **Quantidade**: A quantidade padrão é 200 USDC. Se você tem saldo suficiente, pode aumentar manualmente nos arquivos dos bots.
 
-2. **Modo Agressivo**: O modo agressivo cria mais ordens simultaneamente, então certifique-se de ter saldo suficiente.
+2. **Produtos Desabilitados**: Produtos com muitos erros são desabilitados automaticamente. Reinicie o bot para reativá-los.
 
-3. **Produtos Desabilitados**: Produtos com muitos erros são desabilitados automaticamente. Reinicie o bot para reativá-los.
-
-4. **Logs**: Sempre monitore os logs para verificar se tudo está funcionando corretamente.
+3. **Logs**: Sempre monitore os logs para verificar se tudo está funcionando corretamente.
 
 ---
 
@@ -189,8 +143,7 @@ Depois reinicie:
 Após aplicar as mudanças, verifique:
 
 - [ ] Todos os bots reiniciados
-- [ ] Logs mostram modo correto (Padrão ou Agressivo)
-- [ ] Produtos configurados corretamente (SOL, ZEC, FARTCoin)
+- [ ] Produtos configurados corretamente (BTC, ETH, WETH)
 - [ ] Sem erros de account health (ou com redução automática funcionando)
 - [ ] Produtos problemáticos sendo desabilitados automaticamente
 - [ ] Bots criando ordens normalmente
@@ -199,8 +152,5 @@ Após aplicar as mudanças, verifique:
 
 ## 📚 Documentação Adicional
 
-- `MODO_AGRESSIVO.md` - Guia completo do modo agressivo
 - `CORRECAO_ERROS_ACCOUNT_HEALTH.md` - Detalhes sobre tratamento de erros
 - `COMO_VERIFICAR_ERROS.md` - Como verificar erros nos logs
-- `ATUALIZACAO_PRODUTOS_FUNCIONAIS.md` - Informações sobre produtos funcionais
-
